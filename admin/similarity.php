@@ -1,7 +1,7 @@
 <?php
 
 require_once '../config/dbcon.php';
-$search = $_GET['search'] ?? '';
+$search = $_POST['search'] ?? '';
 $text1 = <<<EOT
 $search
 EOT;
@@ -91,12 +91,12 @@ usort($similarPapers, fn($a, $b) => $b['similarity'] <=> $a['similarity']);
 <body class="d-flex flex-column min-vh-100">
 <?php include 'css/navbar.php' ?>
 <div class="container py-5">
-    <h3 class="mb-4">🔍 Similarity Index</h3>
+    <h3 class="mb-4">Similarity Index</h3>
 
     <?php if (count($similarPapers) > 0): ?>
         <?php 
-        // Filter to only papers with similarity >= 20%
-        $filteredPapers = array_filter($similarPapers, fn($p) => $p['similarity'] >= 20); 
+      
+        $filteredPapers = array_filter($similarPapers, fn($p) => $p['similarity'] >= 25); 
         ?>
 
         <?php if (count($filteredPapers) > 0): ?>
@@ -105,7 +105,13 @@ usort($similarPapers, fn($a, $b) => $b['similarity'] <=> $a['similarity']);
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($paper['title']) ?></h5>
                         <p><strong>Similarity:</strong> <?= $paper['similarity'] ?>%</p>
-                        <p class="card-text text-muted"><?= htmlspecialchars(substr(strip_tags($paper['abstract']), 0, 250)) ?>...</p>
+						   <small>
+							<strong>Authors:</strong> <?= htmlspecialchars($paper['authors']) ?> <br>
+							<strong>Year:</strong> <?= htmlspecialchars($paper['year']) ?> <br>
+							<strong>Department:</strong> <?= htmlspecialchars($paper['Department']) ?> <br>
+						  <strong>Program:</strong> <?= htmlspecialchars($paper['program']) ?>
+						</small>
+                        <p class="card-text text-muted"><?= htmlspecialchars(substr(strip_tags($paper['abstract']), 0, 1000)) ?>...</p>
                         <a href="../assets/upload/pdf/<?=$paper['filename']?>" class="btn btn-sm btn-outline-primary">View Paper</a>
                     </div>
                 </div>

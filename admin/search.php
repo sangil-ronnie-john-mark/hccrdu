@@ -17,12 +17,13 @@ if (!$search) {
 
 // Basic multi-column LIKE search
 $query = "
-    SELECT id, title, authors, year, abstract, filename, program, ocrPdf
+    SELECT id, title, authors, year, abstract, filename, Department, program, ocrPdf
     FROM research 
     WHERE 
         title LIKE ? OR 
         authors LIKE ? OR 
         abstract LIKE ? OR 
+		Department LIKE ? OR 
         program LIKE ? OR 
         year LIKE ? OR 
         ocrPdf LIKE ? 
@@ -36,7 +37,7 @@ if (!$stmt) {
 }
 
 $like = "%$search%";
-$stmt->bind_param("ssssss", $like, $like, $like, $like, $like, $like);
+$stmt->bind_param("sssssss", $like, $like, $like, $like, $like, $like, $like);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -60,17 +61,26 @@ $result = $stmt->get_result();
             <div class="border rounded p-3 mb-4 shadow-sm">
                 <h5 class="mb-1"><?= htmlspecialchars($row['title']) ?></h5>
                 <small>
-                    <strong>Authors:</strong> <?= htmlspecialchars($row['authors']) ?> |
-                    <strong>Year:</strong> <?= htmlspecialchars($row['year']) ?> |
-                    <strong>Program:</strong> <?= htmlspecialchars($row['program']) ?>
-				
+                    <strong>Authors:</strong> <?= htmlspecialchars($row['authors']) ?> <br>
+                    <strong>Year:</strong> <?= htmlspecialchars($row['year']) ?> <br>
+                    <strong>Department:</strong> <?= htmlspecialchars($row['Department']) ?> <br>
+				  <strong>Program:</strong> <?= htmlspecialchars($row['program']) ?>
                 </small>
-                <p class="mt-2">
-                    <?= nl2br(htmlspecialchars(substr($row['abstract'], 0, 300))) ?>...
-                </p>
-			<a href="../assets/upload/pdf/<?=$row['filename']?>" class="btn btn-outline-primary" target="_blank">
-    View PDF
-</a>
+                <p class="mt-3 abstract-text">
+					<?= htmlspecialchars(preg_replace('/\s+/', ' ', substr($row['abstract'], 0, 1000))) ?>...
+				</p>
+
+			<form action="../config/delete.php?file=<?=$row['id']?>" method="POST">
+				<a href="../assets/upload/pdf/<?=$row['filename']?>" class="btn btn-outline-primary" target="_blank">
+					View PDF
+				</a>
+				<input type="hidden" name="filename" value="<?=$row['filename']?>">
+				<input type="hidden" name="id" value="<?=$row['id']?>">
+				<input type="submit" class="btn btn-outline-danger" value="Delete" onclick="return confirm('Are you sure you want to delete <?=$row['title']?>?')">
+			</form>
+			
+			
+
 
                 <?php if (!empty($row['ocrPdf'])): ?>
                     

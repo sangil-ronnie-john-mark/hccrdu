@@ -17,7 +17,25 @@ include '../css/plugins.php';
 
 <main class="d-flex justify-content-center align-items-start mt-4 flex-grow-1">
   <div class="text-start w-75">
- 
+  
+ <?php if (isset($_SESSION['error'])): ?>
+    <div id="error-alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const alertElement = document.getElementById('error-alert');
+            if (alertElement) {
+                const alert = bootstrap.Alert.getOrCreateInstance(alertElement);
+                alert.close();
+            }
+        }, 3000);
+    </script>
+<?php 
+    unset($_SESSION['error']);
+endif; ?>
 
 <?php if (isset($_SESSION['success'])): ?>
     <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -72,33 +90,76 @@ endif; ?>
       </div>
 
       <!-- Options Select (e.g., category) -->
-      <div class="mb-3">
-        <label for="categorySelect" class="form-label">Program</label>
-     <select class="form-select" id="categorySelect" name="category" required>
-	  <option selected disabled value="">Choose...</option>
-	<option value="Bachelor of Elementary Education">Bachelor of Elementary Education</option>
-	<option value="Bachelor of Science in Accounting Information System">Bachelor of Science in Accounting Information System</option>
-	<option value="Bachelor of Science in Tourism Management">Bachelor of Science in Tourism Management</option>
-	<option value="Bachelor of Science in Development Communication">Bachelor of Science in Development Communication</option>
-	<option value="Bachelor of Science in Accountancy">Bachelor of Science in Accountancy</option>
-	<option value="Bachelor of Science in Business Administration major in Financial Management">Bachelor of Science in Business Administration major in Financial Management</option>
-	<option value="Bachelor of Science in Business Administration major in Marketing Management">Bachelor of Science in Business Administration major in Marketing Management</option>
-	<option value="Bachelor of Science in Civil Engineering">Bachelor of Science in Civil Engineering</option>
-	<option value="Bachelor of Science in Computer Engineering">Bachelor of Science in Computer Engineering</option>
-	<option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
-	<option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
-	<option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
-	<option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
-	<option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
-	<option value="Bachelor of Secondary Education major in English">Bachelor of Secondary Education major in English</option>
-	<option value="Bachelor of Secondary Education major in Filipino">Bachelor of Secondary Education major in Filipino</option>
-	<option value="Bachelor of Secondary Education major in Mathematics">Bachelor of Secondary Education major in Mathematics</option>
-	<option value="Bachelor of Secondary Education major in Science">Bachelor of Secondary Education major in Science</option>
-	<option value="Bachelor of Library and Information Science">Bachelor of Library and Information Science</option>
+  <div class="row mb-3">
+  <div class="col-md-6">
+    <label for="departmentSelect" class="form-label">Department</label>
+    <select class="form-select" id="departmentSelect" name="department" required>
+      <option selected disabled value="">Choose...</option>
+      <option value="School of Computing, Information Technology and Engineering">School of Computing, Information Technology and Engineering</option>
+      <option value="School of Business and Accountancy">School of Business and Accountancy</option>
+      <option value="School of Arts, Sciences, and Education">School of Arts, Sciences, and Education</option>
+      <option value="School of Tourism and Hospitality Management">School of Tourism and Hospitality Management</option>
+      <option value="School of Criminal Justice">School of Criminal Justice</option>
+    </select>
+  </div>
 
-	</select>
+  <div class="col-md-6">
+    <label for="categorySelect" class="form-label">Program</label>
+    <select class="form-select" id="categorySelect" name="category" required disabled>
+      <option selected disabled value="">Choose...</option>
+      
+      <!-- School of Computing -->
+      <option value="Bachelor of Science in Information Technology" data-dept="School of Computing, Information Technology and Engineering">Bachelor of Science in Information Technology</option>
+      <option value="Bachelor of Science in Computer Engineering" data-dept="School of Computing, Information Technology and Engineering">Bachelor of Science in Computer Engineering</option>
+      <option value="Bachelor of Science in Computer Science" data-dept="School of Computing, Information Technology and Engineering">Bachelor of Science in Computer Science</option>
+      <option value="Bachelor of Science in Civil Engineering" data-dept="School of Computing, Information Technology and Engineering">Bachelor of Science in Civil Engineering</option>
+      
+      <!-- Business and Accountancy -->
+      <option value="Bachelor of Science in Accounting Information System" data-dept="School of Business and Accountancy">Bachelor of Science in Accounting Information System</option>
+      <option value="Bachelor of Science in Accountancy" data-dept="School of Business and Accountancy">Bachelor of Science in Accountancy</option>
+      <option value="Bachelor of Science in Business Administration major in Financial Management" data-dept="School of Business and Accountancy">Bachelor of Science in Business Administration major in Financial Management</option>
+      <option value="Bachelor of Science in Business Administration major in Marketing Management" data-dept="School of Business and Accountancy">Bachelor of Science in Business Administration major in Marketing Management</option>
 
-      </div>
+      <!-- Arts, Sciences, and Education -->
+      <option value="Bachelor of Elementary Education" data-dept="School of Arts, Sciences, and Education">Bachelor of Elementary Education</option>
+      <option value="Bachelor of Science in Psychology" data-dept="School of Arts, Sciences, and Education">Bachelor of Science in Psychology</option>
+      <option value="Bachelor of Science in Development Communication" data-dept="School of Arts, Sciences, and Education">Bachelor of Science in Development Communication</option>
+      <option value="Bachelor of Secondary Education major in English" data-dept="School of Arts, Sciences, and Education">Bachelor of Secondary Education major in English</option>
+      <option value="Bachelor of Secondary Education major in Filipino" data-dept="School of Arts, Sciences, and Education">Bachelor of Secondary Education major in Filipino</option>
+      <option value="Bachelor of Secondary Education major in Mathematics" data-dept="School of Arts, Sciences, and Education">Bachelor of Secondary Education major in Mathematics</option>
+      <option value="Bachelor of Secondary Education major in Science" data-dept="School of Arts, Sciences, and Education">Bachelor of Secondary Education major in Science</option>
+      <option value="Bachelor of Library and Information Science" data-dept="School of Arts, Sciences, and Education">Bachelor of Library and Information Science</option>
+
+      <!-- Tourism and Hospitality -->
+      <option value="Bachelor of Science in Tourism Management" data-dept="School of Tourism and Hospitality Management">Bachelor of Science in Tourism Management</option>
+      <option value="Bachelor of Science in Hospitality Management" data-dept="School of Tourism and Hospitality Management">Bachelor of Science in Hospitality Management</option>
+
+      <!-- Criminal Justice -->
+      <option value="Bachelor of Science in Criminology" data-dept="School of Criminal Justice">Bachelor of Science in Criminology</option>
+    </select>
+  </div>
+</div>
+
+<script>
+  const departmentSelect = document.getElementById('departmentSelect');
+  const categorySelect = document.getElementById('categorySelect');
+  const allProgramOptions = Array.from(categorySelect.options);
+
+  departmentSelect.addEventListener('change', () => {
+    const selectedDept = departmentSelect.value;
+
+    categorySelect.disabled = false;
+    categorySelect.innerHTML = '<option selected disabled value="">Choose...</option>';
+
+    allProgramOptions.forEach(option => {
+      if (option.dataset.dept === selectedDept) {
+        categorySelect.appendChild(option);
+      }
+    });
+  });
+</script>
+
+
 
       <!-- Abstract -->
       <div class="mb-3">

@@ -9,7 +9,7 @@ include "css/plugins.php";
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HCC RDU | Login</title>
-  <!-- Add your CSS links here, like Bootstrap CSS -->
+ 
 </head>
 <body class="d-flex flex-column h-100">
 

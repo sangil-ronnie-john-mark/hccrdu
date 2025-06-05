@@ -15,12 +15,12 @@ include '../css/plugins.php';
 
 
 
-<main class="flex-grow-1 d-flex justify-content-center align-items-center">
-  <div class="text-center w-50">
+<main class="flex-grow-1 d-flex justify-content-center align-items-center bg-light">
+  <div class="text-center w-50 bg-white p-5 rounded shadow">
+	<img src="../assets/images/rdu.png" height="100px" alt="RDU Logo">
+    <h4>SIMILARITY SEARCH</h4>
 
-    <h3>SIMILARITY SEARCH</h3>
-
-    <form action="similarity.php" method="GET">
+    <form action="similarity.php" method="POST">
       <textarea 
         name="search" 
         class="form-control mb-3" 
@@ -31,9 +31,9 @@ include '../css/plugins.php';
         <i class="bi bi-search"></i> Search
       </button>
     </form>
-
   </div>
 </main>
+
 
 
 
