@@ -72,33 +72,78 @@ endif; ?>
       </div>
 
       <!-- Options Select (e.g., category) -->
-      <div class="mb-3">
-        <label for="categorySelect" class="form-label">Program</label>
-     <select class="form-select" id="categorySelect" name="category" required>
-	<option selected disabled value="">Choose...</option>
-	<option value="Bachelor of Elementary Education">Bachelor of Elementary Education</option>
-	<option value="Bachelor of Science in Accounting Information System">Bachelor of Science in Accounting Information System</option>
-	<option value="Bachelor of Science in Tourism Management">Bachelor of Science in Tourism Management</option>
-	<option value="Bachelor of Science in Development Communication">Bachelor of Science in Development Communication</option>
-	<option value="Bachelor of Science in Accountancy">Bachelor of Science in Accountancy</option>
-	<option value="Bachelor of Science in Business Administration major in Financial Management">Bachelor of Science in Business Administration major in Financial Management</option>
-	<option value="Bachelor of Science in Business Administration major in Marketing Management">Bachelor of Science in Business Administration major in Marketing Management</option>
-	<option value="Bachelor of Science in Civil Engineering">Bachelor of Science in Civil Engineering</option>
-	<option value="Bachelor of Science in Computer Engineering">Bachelor of Science in Computer Engineering</option>
-	<option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
-	<option value="Bachelor of Science in Criminology">Bachelor of Science in Criminology</option>
-	<option value="Bachelor of Science in Hospitality Management">Bachelor of Science in Hospitality Management</option>
-	<option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
-	<option value="Bachelor of Science in Psychology">Bachelor of Science in Psychology</option>
-	<option value="Bachelor of Secondary Education major in English">Bachelor of Secondary Education major in English</option>
-	<option value="Bachelor of Secondary Education major in Filipino">Bachelor of Secondary Education major in Filipino</option>
-	<option value="Bachelor of Secondary Education major in Mathematics">Bachelor of Secondary Education major in Mathematics</option>
-	<option value="Bachelor of Secondary Education major in Science">Bachelor of Secondary Education major in Science</option>
-	<option value="Bachelor of Library and Information Science">Bachelor of Library and Information Science</option>
+<div class="row mb-3">
+  <div class="col-md-6">
+    <label for="departmentSelect" class="form-label">Department</label>
+    <select name="department" class="form-select" id="departmentSelect" required>
+      <option selected disabled value="">Choose...</option>
+      <option value="School of Computing, Information Technology and Engineering">School of Computing, Information Technology and Engineering</option>
+      <option value="School of Arts, Sciences, and Education">School of Arts, Sciences, and Education</option>
+      <option value="School of Criminal Justice">School of Criminal Justice</option>
+      <option value="School of Tourism and Hospitality Management">School of Tourism and Hospitality Management</option>
+      <option value="School of Business and Accountancy">School of Business and Accountancy</option>
+    </select>
+  </div>
 
-	</select>
+  <div class="col-md-6">
+    <label for="categorySelect" class="form-label">Program</label>
+    <select class="form-select" id="categorySelect" name="category" required>
+      <option selected disabled value="">Choose a department first...</option>
+    </select>
+  </div>
+</div>
 
-      </div>
+<script>
+  const programs = {
+    "School of Computing, Information Technology and Engineering": [
+      "Bachelor of Science in Civil Engineering",
+      "Bachelor of Science in Computer Engineering",
+      "Bachelor of Science in Computer Science",
+      "Bachelor of Science in Information Technology",
+      "Bachelor of Library and Information Science"
+    ],
+    "School of Arts, Sciences, and Education": [
+      "Bachelor of Elementary Education",
+      "Bachelor of Science in Development Communication",
+      "Bachelor of Science in Psychology",
+      "Bachelor of Secondary Education major in English",
+      "Bachelor of Secondary Education major in Filipino",
+      "Bachelor of Secondary Education major in Mathematics",
+      "Bachelor of Secondary Education major in Science",
+    ],
+    "School of Criminal Justice": [
+      "Bachelor of Science in Criminology"
+    ],
+    "School of Tourism and Hospitality Management": [
+      "Bachelor of Science in Hospitality Management",
+      "Bachelor of Science in Tourism Management"
+    ],
+    "School of Business and Accountancy": [
+      "Bachelor of Science in Accountancy",
+      "Bachelor of Science in Accounting Information System",
+      "Bachelor of Science in Business Administration major in Financial Management",
+      "Bachelor of Science in Business Administration major in Marketing Management"
+    ]
+  };
+
+  const departmentSelect = document.getElementById('departmentSelect');
+  const categorySelect = document.getElementById('categorySelect');
+
+  departmentSelect.addEventListener('change', function () {
+    const selectedDept = this.value;
+    const options = programs[selectedDept] || [];
+
+    categorySelect.innerHTML = '<option selected disabled value="">Choose...</option>';
+
+    options.forEach(program => {
+      const option = document.createElement('option');
+      option.value = program;
+      option.textContent = program;
+      categorySelect.appendChild(option);
+    });
+  });
+</script>
+
 
       <!-- Abstract -->
       <div class="mb-3">
